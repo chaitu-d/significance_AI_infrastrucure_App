@@ -1,0 +1,400 @@
+:root {
+    --bg: #0b1020;
+    --panel: #121a2e;
+    --card: #17213a;
+    --line: #243152;
+    --text: #e6ebf5;
+    --muted: #9aa6c2;
+    --accent: #4f8cff;
+    --good: #2ecc71;
+    --warn: #f5a623;
+    --bad: #ff5c6c;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(11, 16, 32, 0.96);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    font-weight: 700;
+    font-size: 18px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.logo {
+    background: linear-gradient(135deg, #4f8cff, #8b5cf6);
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 13px;
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tab {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 7px 12px;
+    cursor: pointer;
+    font: inherit;
+}
+
+.tab:hover {
+    color: var(--text);
+}
+
+.tab.active {
+    background: var(--card);
+    color: var(--text);
+    border-color: var(--line);
+}
+
+.cluster-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: flex-end;
+    padding: 16px 24px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+}
+
+.cluster-bar .wide select {
+    min-width: 280px;
+}
+
+.hint {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 0;
+    flex-basis: 100%;
+}
+
+main {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.panel[hidden] {
+    display: none;
+}
+
+h1 {
+    font-size: 28px;
+    margin: 0 0 8px;
+}
+
+h2 {
+    font-size: 20px;
+    margin: 28px 0 12px;
+}
+
+h3 {
+    font-size: 17px;
+    margin: 0 0 6px;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.calc {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 800px) {
+    .calc {
+        grid-template-columns: 1fr;
+    }
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.field label {
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.field small {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+select,
+input {
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font: inherit;
+    min-width: 140px;
+}
+
+.control select {
+    min-width: 150px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.row span {
+    color: var(--muted);
+}
+
+.row strong {
+    text-align: right;
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.hero {
+    background: linear-gradient(135deg, #16234a, #231a4a);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 28px;
+}
+
+.hero p {
+    color: var(--muted);
+    max-width: 820px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.stat {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
+    padding: 14px;
+}
+
+.stat strong {
+    display: block;
+    font-size: 22px;
+    color: #9ec2ff;
+}
+
+.stat span {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.kpi .label {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.kpi .value {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 4px 0;
+}
+
+.kpi .sub {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.notes {
+    padding-left: 20px;
+}
+
+.notes li {
+    margin-bottom: 8px;
+}
+
+.layers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+}
+
+.layer {
+    display: flex;
+    flex-direction: column;
+}
+
+.layer p {
+    color: var(--muted);
+    font-size: 14px;
+    flex-grow: 1;
+}
+
+.letter {
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: white;
+    font-weight: 700;
+    margin-right: 8px;
+}
+
+.btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font: inherit;
+    margin-top: 10px;
+    align-self: flex-start;
+}
+
+.bar {
+    display: flex;
+    height: 22px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 8px;
+    background: var(--bg);
+}
+
+.bar div {
+    height: 100%;
+    transition: width 0.3s;
+}
+
+#powBarIt {
+    background: var(--accent);
+}
+
+#powBarCool {
+    background: var(--warn);
+}
+
+.meter {
+    height: 14px;
+    background: var(--bg);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    margin: 10px 0 16px;
+}
+
+.meter div {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #4f8cff, #2ecc71);
+    transition: width 0.3s;
+}
+
+.badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.badge.strong {
+    background: rgba(46, 204, 113, 0.15);
+    color: var(--good);
+}
+
+.badge.moderate {
+    background: rgba(245, 166, 35, 0.15);
+    color: var(--warn);
+}
+
+.badge.weak {
+    background: rgba(255, 92, 108, 0.15);
+    color: var(--bad);
+}
+
+.control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.control p {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.weight {
+    color: var(--accent);
+    font-size: 12px;
+    margin-left: 6px;
+}
+
+.gaps {
+    padding-left: 20px;
+}
+
+.gaps li {
+    margin-bottom: 6px;
+}
+
+.footnote {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 24px;
+}

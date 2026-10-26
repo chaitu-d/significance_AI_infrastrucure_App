@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Infrastructure Suite</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="calc.js" defer></script>
+    <script src="app.js" defer></script>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="brand"><span class="logo">AI</span> Infrastructure Suite</div>
+        <nav class="tabs">
+            <button class="tab active" data-tab="dashboard">Dashboard</button>
+            <button class="tab" data-tab="components">Components</button>
+            <button class="tab" data-tab="compute">Compute</button>
+            <button class="tab" data-tab="memory">Memory</button>
+            <button class="tab" data-tab="power">Power &amp; Cooling</button>
+            <button class="tab" data-tab="network">Network</button>
+            <button class="tab" data-tab="storage">Storage</button>
+            <button class="tab" data-tab="security">Security</button>
+        </nav>
+    </header>
+
+    <section class="cluster-bar">
+        <div class="field wide">
+            <label for="gpuModel">GPU model</label>
+            <select id="gpuModel"></select>
+            <small id="clusterSpec"></small>
+        </div>
+        <div class="field">
+            <label for="gpuCount">GPU count</label>
+            <input id="gpuCount" type="number" min="1" step="1" value="512">
+        </div>
+        <div class="field">
+            <label for="pue">PUE (facility overhead)</label>
+            <input id="pue" type="number" min="1" step="0.05" value="1.3">
+        </div>
+        <div class="field">
+            <label for="kwhPrice">Electricity ($/kWh)</label>
+            <input id="kwhPrice" type="number" min="0" step="0.01" value="0.12">
+        </div>
+        <p class="hint">Shared cluster profile. Every calculator updates when you change these values.</p>
+    </section>
+
+    <main>
+        <!-- DASHBOARD -->
+        <section class="panel" id="panel-dashboard">
+            <div class="hero">
+                <h1>Significance of AI Infrastructure</h1>
+                <p>AI infrastructure is the integrated ecosystem of compute, networking, storage, memory, power,
+                    cooling, security, and MLOps that lets AI systems train and run at scale. Without it, even strong
+                    algorithms cannot deliver practical value. This suite turns those components into working
+                    calculators, so you can size a cluster, check its power and cooling needs, and score its security
+                    posture in one place.</p>
+                <div class="stats">
+                    <div class="stat"><strong>30 to 100 kW</strong><span>rack power density range for AI infrastructure
+                            (from the paper)</span></div>
+                    <div class="stat"><strong>Up to 40%</strong><span>share of data center demand inference could reach
+                            by 2030 (paper's projection)</span></div>
+                    <div class="stat"><strong>170+ GW</strong><span>global data center capacity projected by 2030
+                            (paper's projection)</span></div>
+                    <div class="stat"><strong>About 1%</strong><span>of global electricity projected for AI compute by
+                            decade's end (paper's projection)</span></div>
+                </div>
+            </div>
+
+            <h2>Cluster summary</h2>
+            <div class="cards">
+                <div class="card kpi">
+                    <div class="label">GPUs in cluster</div>
+                    <div class="value" id="dbGpus">—</div>
+                    <div class="sub" id="dbGpuSub">—</div>
+                </div>
+                <div class="card kpi">
+                    <div class="label">Training run time</div>
+                    <div class="value" id="dbTrain">—</div>
+                    <div class="sub" id="dbTrainSub">—</div>
+                </div>
+                <div class="card kpi">
+                    <div class="label">IT load</div>
+                    <div class="value" id="dbIt">—</div>
+                    <div class="sub">Servers and GPUs, before facility overhead</div>
+                </div>
+                <div class="card kpi">
+                    <div class="label">Facility draw</div>
+                    <div class="value" id="dbFac">—</div>
+                    <div class="sub" id="dbFacSub">—</div>
+                </div>
+                <div class="card kpi">
+                    <div class="label">Annual energy cost</div>
+                    <div class="value" id="dbCost">—</div>
+                    <div class="sub" id="dbKwh">—</div>
+                </div>
+                <div class="card kpi">
+                    <div class="label">Annual CO2</div>
+                    <div class="value" id="dbCo2">—</div>
+                    <div class="sub">Metric tons, at the grid intensity set in Power</div>
+                </div>
+                <div class="card kpi">
+                    <div class="label">Network fabric</div>
+                    <div class="value" id="dbFabric">—</div>
+                    <div class="sub" id="dbFabricSub">—</div>
+                </div>
+                <div class="card kpi">
+                    <div class="label">Inference GPUs needed</div>
+                    <div class="value" id="dbInf">—</div>
+                    <div class="sub" id="dbInfSub">—</div>
+                </div>
+                <div class="card kpi">
+                    <div class="label">Security score</div>
+                    <div class="value" id="dbSec">—</div>
+                    <div class="sub" id="dbSecSub">—</div>
+                </div>
+            </div>
+
+            <h2>Recommendations</h2>
+            <ul class="card notes" id="dbNotes"></ul>
+            <p class="footnote">Based on "Significance of AI Infrastructure" by Chaitanya Dupad and Tarunkumar Dupad.
+                Estimates are planning aids, not vendor quotes.</p>
+        </section>
+
+        <!-- COMPONENTS -->
+        <section class="panel" id="panel-components" hidden>
+            <h2>Seven layers of AI infrastructure</h2>
+            <div class="layers">
+                <div class="card layer">
+                    <h3><span class="letter">A</span>Compute</h3>
+                    <p>GPUs, TPUs, CPUs, and HPC clusters provide the parallel processing needed for LLMs, computer
+                        vision, and generative AI.</p>
+                    <button class="btn" data-go="compute">Open compute calculator</button>
+                </div>
+                <div class="card layer">
+                    <h3><span class="letter">B</span>High-performance switching</h3>
+                    <p>High port-density switches and low-latency leaf-spine fabrics keep distributed training from
+                        stalling on communication.</p>
+                    <button class="btn" data-go="network">Open network calculator</button>
+                </div>
+                <div class="card layer">
+                    <h3><span class="letter">C</span>Interconnects and GPU sharing</h3>
+                    <p>InfiniBand, high-speed Ethernet, NVLink, vGPU, MIG, and MPS raise utilization and cut
+                        communication latency.</p>
+                    <button class="btn" data-go="network">Open network calculator</button>
+                </div>
+                <div class="card layer">
+                    <h3><span class="letter">D</span>Storage and data</h3>
+                    <p>Distributed storage, parallel file systems, and data pipelines feed accelerators fast enough to
+                        avoid I/O bottlenecks.</p>
+                    <button class="btn" data-go="storage">Open storage calculator</button>
+                </div>
+                <div class="card layer">
+                    <h3><span class="letter">E</span>Security and governance</h3>
+                    <p>Zero trust, encryption, IAM, model integrity checks, poisoning defenses, and GDPR or HIPAA
+                        compliance protect data and models.</p>
+                    <button class="btn" data-go="security">Open security scorer</button>
+                </div>
+                <div class="card layer">
+                    <h3><span class="letter">F</span>Power, cooling, and design</h3>
+                    <p>AI racks draw 30 to 100 kW. Liquid cooling, efficient layouts, and PUE tracking keep costs and
+                        carbon under control.</p>
+                    <button class="btn" data-go="power">Open power calculator</button>
+                </div>
+                <div class="card layer">
+                    <h3><span class="letter">G</span>Memory</h3>
+                    <p>Storage, DRAM, and GPU memory (HBM or GDDR) hold datasets, weights, activations, and gradients.
+                        VRAM is often the binding limit.</p>
+                    <button class="btn" data-go="memory">Open memory calculator</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMPUTE -->
+        <section class="panel" id="panel-compute" hidden>
+            <div class="calc">
+                <div class="card">
+                    <h2 style="margin-top:0">Training time and cost</h2>
+                    <p class="muted">Uses the standard estimate: training FLOPs ≈ 6 × parameters × tokens.</p>
+                    <div class="field"><label for="compParams">Model size (billion parameters)</label><input
+                            id="compParams" type="number" min="0.1" step="0.1" value="7"></div>
+                    <div class="field"><label for="compTokens">Training tokens (billions)</label><input id="compTokens"
+                            type="number" min="0.1" step="1" value="1000"></div>
+                    <div class="field"><label for="compMfu">Model FLOP utilization (%)</label><input id="compMfu"
+                            type="number" min="1" max="100" step="1" value="40"><small>Typical large-scale runs land
+                            between 30% and 50%.</small></div>
+                    <div class="field"><label for="compPrice">Cost per GPU-hour ($)</label><input id="compPrice"
+                            type="number" min="0" step="0.1" value="2.5"></div>
+                </div>
+                <div class="card">
+                    <h2 style="margin-top:0">Results</h2>
+                    <div class="row"><span>Training time</span><strong id="outDays">—</strong></div>
+                    <div class="row"><span>GPU-hours</span><strong id="outGpuHours">—</strong></div>
+                    <div class="row"><span>Estimated compute cost</span><strong id="outTrainCost">—</strong></div>
+                    <div class="row"><span>Total training FLOPs</span><strong id="outFlops">—</strong></div>
+                    <div class="row"><span>Training throughput (tokens/s)</span><strong id="outTokPerSec">—</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MEMORY -->
+        <section class="panel" id="panel-memory" hidden>
+            <div class="calc">
+                <div class="card">
+                    <h2 style="margin-top:0">Model memory</h2>
+                    <div class="field"><label for="memParams">Model size (billion parameters)</label><input
+                            id="memParams" type="number" min="0.1" step="0.1" value="70"></div>
+                    <div class="field">
+                        <label for="memPrecision">Inference precision</label>
+                        <select id="memPrecision">
+                            <option value="FP32">FP32 (4 bytes per parameter)</option>
+                            <option value="FP16 / BF16" selected>FP16 / BF16 (2 bytes)</option>
+                            <option value="INT8">INT8 (1 byte)</option>
+                            <option value="INT4">INT4 (0.5 bytes)</option>
+                        </select>
+                    </div>
+                    <div class="field"><label for="memKv">KV-cache memory (GB)</label><input id="memKv" type="number"
+                            min="0" step="1" value="10"><small>Scales with batch size and context length.</small></div>
+                    <div class="field"><label for="memAct">Training activation overhead (%)</label><input id="memAct"
+                            type="number" min="0" step="1" value="25"></div>
+                </div>
+                <div class="card">
+                    <h2 style="margin-top:0">Results (GPU selected above)</h2>
+                    <div class="row"><span>Inference weights</span><strong id="outInfWeights">—</strong></div>
+                    <div class="row"><span>Inference total (with overhead)</span><strong id="outInfTotal">—</strong>
+                    </div>
+                    <div class="row"><span>GPUs needed for inference</span><strong id="outInfGpus">—</strong></div>
+                    <div class="row"><span>Training optimizer state (16 bytes per parameter)</span><strong
+                            id="outTrainState">—</strong></div>
+                    <div class="row"><span>Training total with activations</span><strong id="outTrainTotal">—</strong>
+                    </div>
+                    <div class="row"><span>GPUs needed for training (ideal sharding)</span><strong
+                            id="outTrainGpus">—</strong></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- POWER -->
+        <section class="panel" id="panel-power" hidden>
+            <div class="calc">
+                <div class="card">
+                    <h2 style="margin-top:0">Power and cooling inputs</h2>
+                    <div class="field"><label for="powOverhead">Server overhead (CPUs, memory, NICs, fans,
+                            %)</label><input id="powOverhead" type="number" min="0" step="1" value="30"></div>
+                    <div class="field"><label for="powRack">Design density per rack (kW)</label><input id="powRack"
+                            type="number" min="1" step="1" value="40"><small>The paper cites 30 to 100 kW per rack for
+                            AI.</small></div>
+                    <div class="field"><label for="powUtil">Average utilization (%)</label><input id="powUtil"
+                            type="number" min="0" max="100" step="1" value="80"></div>
+                    <div class="field"><label for="powCo2">Grid carbon intensity (kg CO2 per kWh)</label><input
+                            id="powCo2" type="number" min="0" step="0.01" value="0.39"></div>
+                </div>
+                <div class="card">
+                    <h2 style="margin-top:0">Results</h2>
+                    <div class="row"><span>GPU power</span><strong id="outGpuKw">—</strong></div>
+                    <div class="row"><span>IT load (GPUs + servers)</span><strong id="outItKw">—</strong></div>
+                    <div class="row"><span>Cooling and facility overhead</span><strong id="outCoolKw">—</strong></div>
+                    <div class="row"><span>Facility draw (IT × PUE)</span><strong id="outFacKw">—</strong></div>
+                    <div class="row"><span>Racks needed</span><strong id="outRacks">—</strong></div>
+                    <div class="row"><span>Annual energy</span><strong id="outKwh">—</strong></div>
+                    <div class="row"><span>Annual energy cost</span><strong id="outEnergyCost">—</strong></div>
+                    <div class="row"><span>Annual CO2</span><strong id="outCo2">—</strong></div>
+                    <div class="row"><span>Cooling recommendation</span><strong id="outCooling">—</strong></div>
+                    <p class="muted">Facility power split</p>
+                    <div class="bar">
+                        <div id="powBarIt" style="width:0"></div>
+                        <div id="powBarCool" style="width:0"></div>
+                    </div>
+                    <p class="muted">Blue: IT load. Amber: cooling and facility overhead.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- NETWORK -->
+        <section class="panel" id="panel-network" hidden>
+            <div class="calc">
+                <div class="card">
+                    <h2 style="margin-top:0">Fabric inputs</h2>
+                    <div class="field"><label for="netNics">NICs per GPU</label><input id="netNics" type="number"
+                            min="1" step="1" value="1"></div>
+                    <div class="field">
+                        <label for="netSpeed">Link speed</label>
+                        <select id="netSpeed">
+                            <option value="100">100 Gbps</option>
+                            <option value="200">200 Gbps</option>
+                            <option value="400" selected>400 Gbps</option>
+                            <option value="800">800 Gbps</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="netRadix">Switch port count (radix)</label>
+                        <select id="netRadix">
+                            <option value="32">32 ports</option>
+                            <option value="64" selected>64 ports</option>
+                            <option value="128">128 ports</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="netOversub">Oversubscription</label>
+                        <select id="netOversub">
+                            <option value="1" selected>1:1 (non-blocking)</option>
+                            <option value="2">2:1</option>
+                            <option value="3">3:1</option>
+                        </select>
+                        <small>Lower ratios keep more bandwidth for all-reduce traffic.</small>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2 style="margin-top:0">Results</h2>
+                    <div class="row"><span>Network endpoints (GPUs × NICs)</span><strong id="outEndpoints">—</strong>
+                    </div>
+                    <div class="row"><span>Topology</span><strong id="outTiers">—</strong></div>
+                    <div class="row"><span>Leaf switches</span><strong id="outLeaves">—</strong></div>
+                    <div class="row"><span>Spine switches</span><strong id="outSpines">—</strong></div>
+                    <div class="row"><span>Total switches</span><strong id="outSwitches">—</strong></div>
+                    <div class="row"><span>Ports per leaf (down / up)</span><strong id="outUplinks">—</strong></div>
+                    <div class="row"><span>Aggregate fabric bandwidth</span><strong id="outFabricTbps">—</strong></div>
+                    <div class="row"><span>Bandwidth per endpoint under load</span><strong id="outPerEp">—</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STORAGE -->
+        <section class="panel" id="panel-storage" hidden>
+            <div class="calc">
+                <div class="card">
+                    <h2 style="margin-top:0">Storage inputs</h2>
+                    <div class="field"><label for="stDataset">Training dataset size (TB)</label><input id="stDataset"
+                            type="number" min="0" step="1" value="50"></div>
+                    <div class="field"><label for="stRep">Dataset replication factor</label><input id="stRep"
+                            type="number" min="1" step="1" value="3"></div>
+                    <div class="field"><label for="stModel">Model size for checkpoints (billion
+                            parameters)</label><input id="stModel" type="number" min="0.1" step="0.1" value="7"></div>
+                    <div class="field"><label for="stKept">Checkpoints retained</label><input id="stKept" type="number"
+                            min="0" step="1" value="5"></div>
+                    <div class="field"><label for="stWindow">Checkpoint write window (seconds)</label><input
+                            id="stWindow" type="number" min="1" step="1" value="60"><small>Time allowed to write one
+                            checkpoint without stalling training.</small></div>
+                </div>
+                <div class="card">
+                    <h2 style="margin-top:0">Results</h2>
+                    <div class="row"><span>Size of one checkpoint</span><strong id="outCkpt">—</strong></div>
+                    <div class="row"><span>All retained checkpoints</span><strong id="outCkptTotal">—</strong></div>
+                    <div class="row"><span>Dataset footprint (with replication)</span><strong
+                            id="outDataTotal">—</strong></div>
+                    <div class="row"><span>Total storage required</span><strong id="outStTotal">—</strong></div>
+                    <div class="row"><span>Checkpoint write bandwidth needed</span><strong id="outCkptBw">—</strong>
+                    </div>
+                    <div class="row"><span>Data ingest needed for training</span><strong id="outIngest">—</strong></div>
+                    <p class="muted">Ingest = training tokens per second × 4 bytes per token, using the compute tab's
+                        throughput.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECURITY -->
+        <section class="panel" id="panel-security" hidden>
+            <div class="calc">
+                <div class="card">
+                    <h2 style="margin-top:0">Security controls</h2>
+                    <p class="muted">Set each control to what is actually in place. Weights total 100.</p>
+                    <div id="secList"></div>
+                </div>
+                <div class="card">
+                    <h2 style="margin-top:0">Score</h2>
+                    <div class="row"><span>Security score</span><strong id="outSecScore">—</strong></div>
+                    <div class="row"><span>Rating</span><span id="outSecRating" class="badge">—</span></div>
+                    <div class="meter">
+                        <div id="secBar"></div>
+                    </div>
+                    <h3>Largest gaps</h3>
+                    <ul class="gaps" id="secGaps"></ul>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
